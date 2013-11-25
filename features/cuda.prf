@@ -10,7 +10,10 @@ isEmpty(CUDA_HOME):CUDA_HOME=$$[CUDA_HOME]
 isEmpty(CUDA_HOME):error(CUDA could not be found)
 
 NVCC = $$CUDA_HOME/bin/nvcc
-debug:NVCC_FLAGS += -g -G
+
+NVCC_FLAGS_DEBUG *= -g -G
+CONFIG(release, debug|release):NVCC_FLAGS += $$NVCC_FLAGS_RELEASE
+CONFIG(debug, debug|release):NVCC_FLAGS += $$NVCC_FLAGS_DEBUG
 
 cuda.input = CUDA_SOURCES
 cuda.output = ${QMAKE_FILE_BASE}.o
