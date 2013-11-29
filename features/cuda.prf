@@ -28,8 +28,10 @@ cuda.depend_command = $$NVCC \
 cuda.dependency_type = TYPE_C
 QMAKE_EXTRA_COMPILERS += cuda
 
-*-64:CUDA_LIB = $$CUDA_HOME/lib64
-else:CUDA_LIB = $$CUDA_HOME/lib
+*-64:CUDA_LIB      = $$CUDA_HOME/lib64
+else:*-32:CUDA_LIB = $$CUDA_HOME/lib
+else:isEqual(QT_ARCH, x86_64):CUDA_LIB = $$CUDA_HOME/lib64
+else:CUDA_LIB      = $$CUDA_HOME/lib
 
 QMAKE_RPATHDIR *= $$CUDA_LIB
 
