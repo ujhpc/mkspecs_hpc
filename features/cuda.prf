@@ -15,23 +15,33 @@ NVCC_FLAGS_DEBUG *= -g -G
 CONFIG(release, debug|release):NVCC_FLAGS += $$NVCC_FLAGS_RELEASE
 CONFIG(debug, debug|release):NVCC_FLAGS += $$NVCC_FLAGS_DEBUG
 
+NVCC_CXXFLAGS = $$QMAKE_CXXFLAGS
+# NVCC gets confused with Clang on C++11
+macx:c++11 {
+  NVCC_CXXFLAGS -= -stdlib=libc++
+  NVCC_CXXFLAGS -= -std=c++11
+}
+!isEmpty(NVCC_CXXFLAGS):NVCC_CXXFLAGS = -Xcompiler $$join(NVCC_CXXFLAGS,",")
+
 cuda.input = CUDA_SOURCES
 cuda.output = ${QMAKE_FILE_BASE}.o
 cuda.commands = $$NVCC \
-  -Xcompiler $$join(QMAKE_CXXFLAGS,",") \
-  $$NVCC_OPTS $$NVCC_FLAGS \
+  $$NVCC_CXXFLAGS $$NVCC_OPTS $$NVCC_FLAGS \
   -c ${QMAKE_FILE_NAME} -o ${QMAKE_FILE_OUT}
 cuda.depend_command = $$NVCC \
-  -Xcompiler $$join(QMAKE_CXXFLAGS,",") \
-  $$NVCC_OPTS $$NVCC_FLAGS \
+  $$NVCC_CXXFLAGS $$NVCC_OPTS $$NVCC_FLAGS \
   -M $$CUDA_INC ${QMAKE_FILE_NAME}
 cuda.dependency_type = TYPE_C
 QMAKE_EXTRA_COMPILERS += cuda
 
-*-64:CUDA_LIB      = $$CUDA_HOME/lib64
-else:*-32:CUDA_LIB = $$CUDA_HOME/lib
-else:isEqual(QT_ARCH, x86_64):CUDA_LIB = $$CUDA_HOME/lib64
-else:CUDA_LIB      = $$CUDA_HOME/lib
+# resolve lib64 on Linux
+linux-* {
+  *-64:CUDA_LIB      = $$CUDA_HOME/lib64
+  else:*-32:CUDA_LIB = $$CUDA_HOME/lib
+  else:isEqual(QT_ARCH, x86_64) {
+    CUDA_LIB         = $$CUDA_HOME/lib64
+  } else:CUDA_LIB    = $$CUDA_HOME/lib
+} else:CUDA_LIB      = $$CUDA_HOME/lib
 
 QMAKE_RPATHDIR *= $$CUDA_LIB
 
