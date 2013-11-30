@@ -5,11 +5,17 @@
 # (1) use CONFIG += cuda in your project
 # (2) run qmake CONFIG+=cuda
 
-CUDA_HOME = $$system(which nvcc | sed 's,/bin/nvcc$,,')
-isEmpty(CUDA_HOME) {
-  CUDA_HOME=$$[CUDA_HOME]
-  NVCC=$$CUDA_HOME/bin/nvcc
-} else:NVCC=nvcc
+load(path_utils)
+
+NVCC = $$program_path(nvcc)
+isEmpty(NVCC) {
+  CUDA_HOME = $$[CUDA_HOME]
+  NVCC      = $$CUDA_HOME/bin/nvcc
+} else {
+  CUDA_HOME = $$dirname(NVCC)
+  CUDA_HOME = $$dirname(CUDA_HOME)
+  NVCC      = nvcc
+}
 isEmpty(CUDA_HOME) {
   error(CUDA could not be found. \
         Make sure nvcc is in your PATH or CUDA_HOME environment variable \

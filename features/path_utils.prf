@@ -1,0 +1,10 @@
+defineReplace(program_path) {
+  win_cmd_shell:program = $${1}.exe
+  else:         program = $$1
+
+  PATH  = "$$(PATH)"
+  paths = $$split(PATH, $$QMAKE_DIRLIST_SEP)
+
+  for(path, paths):exists($$path/$$program):return($$path/$$program)
+  return()
+}
