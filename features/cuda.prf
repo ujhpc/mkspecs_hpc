@@ -54,7 +54,8 @@ linux-* {
   } else:CUDA_LIB    = $$CUDA_HOME/lib
 } else:CUDA_LIB      = $$CUDA_HOME/lib
 
-QMAKE_RPATHDIR *= $$CUDA_LIB
+QMAKE_RPATHDIR          *= $$CUDA_LIB
+!unix|macx:QMAKE_LFLAGS *= -Wl,-rpath,$$CUDA_LIB
 
 INCLUDEPATH *= $$CUDA_HOME/include
 LIBS        *= -L$$CUDA_LIB -lcudart
