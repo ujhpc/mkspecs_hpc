@@ -33,6 +33,7 @@ macx:c++11 {
   NVCC_CXXFLAGS -= -std=c++11
 }
 !isEmpty(NVCC_CXXFLAGS):NVCC_CXXFLAGS = -Xcompiler $$join(NVCC_CXXFLAGS,",")
+!isEmpty(INCLUDEPATH):  NVCC_CXXFLAGS = -I $$join(INCLUDEPATH,",")
 
 cuda.input = CUDA_SOURCES
 cuda.output = ${QMAKE_FILE_BASE}.o
