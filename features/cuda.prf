@@ -28,8 +28,12 @@ CONFIG(debug, debug|release):NVCC_FLAGS += $$NVCC_FLAGS_DEBUG
 
 NVCC_CXXFLAGS = $$QMAKE_CXXFLAGS
 
-# NVCC gets confused with libc++ on C++11
-macx:c++11:NVCC_CXXFLAGS -= -stdlib=libc++
+# NVCC gets confused with libc++ and C++11
+c++11 {
+  NVCC_CXXFLAGS -= -stdlib=libc++
+  NVCC_CXXFLAGS -= -std=c++11
+  NVCC_CXXFLAGS -= -std=c++0x
+}
 
 !isEmpty(NVCC_CXXFLAGS):NVCC_CXXFLAGS  = -Xcompiler $$join(NVCC_CXXFLAGS,",")
 !isEmpty(INCLUDEPATH):  NVCC_CXXFLAGS += -I $$join(INCLUDEPATH,",")
