@@ -11,6 +11,10 @@ To enable support for *Qt* `<= 5.1` *Qmake* please add `features` symlink:
 
 	ln -s mkspecs/features .
 
+**NOTE:** *Qt* 5.2.1 (or higher) require `.qmake.conf` file (may be empty) in
+project root in order to tell *Qmake* where to search for `mkspecs`, as this
+folder search heuristics were removed in 5.2.1.
+
 ## Usage
 
 ### CUDA
